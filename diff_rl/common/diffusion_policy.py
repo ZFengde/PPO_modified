@@ -221,46 +221,18 @@ class Diffusion_Policy(nn.Module): # forward method here is generate a sample
         action_feat = action_feat.unsqueeze(1).expand(-1, self.n_actions, -1)
         actions = self.sample(action_feat)
         return actions # here is the action
-
-
-
-# def q_value(state, action):
-#     q = - (state.mean()- action.mean()) ** 2
-#     return q
-
-# diff_test = Diffusion_Policy(action_feat_dim=20, action_dim=20, model=Networks)
-# actor_optimizer = th.optim.Adam(diff_test.parameters(), lr=0.001)
-
-# iteration = 0
-# while iteration < 3000:
-#     # random_generator = th.randint(0, 2, (1,))
-
-#     s = th.rand(6, 20)
-#     output = diff_test(s).squeeze()
-#     q = q_value(s, output)
-
-#     h = diff_test.loss(action_feat=s, x=output)
-#     loss = -q
-#     print(iteration)
-#     iteration += 1
-
-#     actor_optimizer.zero_grad()
-#     loss.backward()
-#     actor_optimizer.step()
-#     g = 1
     
-# print(11111)
-# a = th.zeros(6, 20)
-# # print(diff_test(a))
-# print(diff_test(a).mean())
+    def recon_with_xT(self, action_feat, xT):
+        x = xT
+        batch_size = action_feat.shape[0] # get batch size
+        shape = (batch_size, self.n_actions, self.action_dim) # make output shape same as action shape
+    
+        device = self.betas.device
+        batch_size = shape[0] 
 
-# a = th.ones(6, 20)
-# # print(diff_test(a))
-# print(diff_test(a).mean())
-
-# a = th.ones(6, 20) * 100
-# # print(diff_test(a))
-# print(diff_test(a).mean())
-
-
-
+        # here is p_sample_loop
+        for i in reversed(range(0, self.n_timesteps)):
+            time = th.full((batch_size, ), i, device=device, dtype=th.long) # fill batch size with i
+            x = self.p_sample(x, time, action_feat)
+        action = x
+        return action.squeeze()

@@ -46,7 +46,7 @@ class ActorCriticPolicy(BasePolicy):
             optimizer_kwargs = {}
             # Small values to avoid NaN in Adam optimizer
             if optimizer_class == th.optim.Adam:
-                optimizer_kwargs["eps"] = 1e-3
+                optimizer_kwargs["eps"] = 1e-5
 
         super().__init__(
             observation_space,

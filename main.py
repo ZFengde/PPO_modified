@@ -34,9 +34,7 @@ def main(
 				policy="MlpPolicy",
 	      		env=env, 
 				verbose=1, 
-				tensorboard_log=logdir, 
-				seed=seed,
-				target_kl=target_kl)
+				tensorboard_log=logdir)
 
 	for i in range(iter_num):
 		model.learn(reset_num_timesteps=False, tb_log_name=f"{algo_name}")
@@ -45,9 +43,9 @@ def main(
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env_id', type=str, default='MountainCarContinuous-v0') # 'Turtlebot-v2''Safexp-PointGoal1-v0'
+    parser.add_argument('--env_id', type=str, default='MountainCarContinuous-v0')
     parser.add_argument('--algo', type=str, default='Diffusion_RL') 
-    parser.add_argument('--policy_type', type=str, default='MlpPolicy') # Mlp
+    parser.add_argument('--policy_type', type=str, default='MlpPolicy')
     parser.add_argument('--n_envs', type=int, default=6)
     parser.add_argument('--iter_num', type=int, default=700) # Total_timestep = iter_num * n_envs * n_steps, here is 2000 * 4 * 20480 = 1.2e7
     parser.add_argument('--seed', type=int, default=3)
