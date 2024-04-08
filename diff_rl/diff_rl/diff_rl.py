@@ -151,6 +151,7 @@ class Diffusion_RL(OnPolicyAlgorithm):
                     # Convert discrete action from float to long
                     actions = rollout_data.actions.long().flatten()
 
+                # TODO, need to modify here, add a random variable as input from diffusion process
                 values, log_prob, entropy = self.policy.evaluate_actions(rollout_data.observations, actions)
                 values = values.flatten()
                 # Normalize advantage
